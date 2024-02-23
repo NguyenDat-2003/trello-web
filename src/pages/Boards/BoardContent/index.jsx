@@ -5,11 +5,11 @@ function BoardContent() {
     <>
       <Box
         sx={{
-          backgroundColor: 'primary.main',
           width: ' 100%',
           height: (theme) => `calc(100vh - ${theme.trello.headerBarheight} - ${theme.trello.boardBarheight})`,
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          bgcolor: (theme) => (theme.palette.mode == 'dark' ? '#34495e' : '#009688')
         }}
       >
         Board Content
