@@ -1,18 +1,111 @@
 import Box from '@mui/material/Box'
+import Chip from '@mui/material/Chip'
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard'
+import VpnLockIcon from '@mui/icons-material/VpnLock'
+import AddToDriveIcon from '@mui/icons-material/AddToDrive'
+import BoltIcon from '@mui/icons-material/Bolt'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import Avatar from '@mui/material/Avatar'
+import AvatarGroup from '@mui/material/AvatarGroup'
+import Tooltip from '@mui/material/Tooltip'
+import Button from '@mui/material/Button'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+
+const MENU_STYLES = {
+  color: 'primary.main',
+  bgcolor: 'white',
+  border: 'none',
+  paddingX: '5px',
+  borderRadius: '4px',
+  '& .MuiSvgIcon-root': {
+    color: 'primary.main'
+  },
+  '&:hover': {
+    bgcolor: 'primary.50'
+  }
+}
 
 function BoardBar() {
   return (
     <>
       <Box
         sx={{
-          backgroundColor: 'primary.dark',
           width: ' 100%',
           height: (theme) => theme.trello.boardBarheight,
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+          paddingX: 2,
+          overflowX: 'auto',
+          borderTop: '1px solid #00bfa5'
         }}
       >
-        Board Bar
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Chip sx={MENU_STYLES} icon={<SpaceDashboardIcon />} label="DatDev MERN Stack Trello-App" clickable />
+          <Chip sx={MENU_STYLES} icon={<VpnLockIcon />} label="Public Private WorkSpace" clickable />
+          <Chip sx={MENU_STYLES} icon={<AddToDriveIcon />} label="Add to Google Drive" clickable />
+          <Chip sx={MENU_STYLES} icon={<BoltIcon />} label="Automation" clickable />
+          <Chip sx={MENU_STYLES} icon={<FilterListIcon />} label="Filters" clickable />
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Button variant="outlined" startIcon={<PersonAddIcon />}>
+            Invite
+          </Button>
+          <AvatarGroup
+            max={6}
+            sx={{
+              '& .MuiAvatar-root': {
+                width: '34px',
+                height: '34px',
+                fontSize: 16
+              }
+            }}
+          >
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+            <Tooltip title="DatDev">
+              <Avatar
+                src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
+                alt="datdev"
+              />
+            </Tooltip>
+          </AvatarGroup>
+        </Box>
       </Box>
     </>
   )
