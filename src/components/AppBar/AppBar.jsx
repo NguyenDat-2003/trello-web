@@ -11,7 +11,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
-import ModeSelect from '~/components/ModeSelect'
+import ModeSelect from '~/components/ModeSelect/ModeSelect'
 import { ReactComponent as TrelloLogo } from '~/assets/trello.svg'
 import WorkSpace from './Menus/WorkSpace'
 import Recent from './Menus/Recent'

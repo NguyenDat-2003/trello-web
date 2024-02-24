@@ -4,12 +4,17 @@ import { teal, deepOrange, cyan, orange } from '@mui/material/colors'
 const APP_BAR_HEIGHT = '58px'
 const BOARD_BAR_HEIGHT = '60px'
 const BOARD_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
+
+const COLUMN_HEADER_HEIGHT = '50px'
+const COLUMN_FOOTER_HEIGHT = '56px'
 // Create a theme instance.
 const theme = extendTheme({
   trello: {
     headerBarheight: APP_BAR_HEIGHT,
     boardBarheight: BOARD_BAR_HEIGHT,
-    boardContentheight: BOARD_CONTENT_HEIGHT
+    boardContentheight: BOARD_CONTENT_HEIGHT,
+    column_header_height: COLUMN_HEADER_HEIGHT,
+    column_footer_height: COLUMN_FOOTER_HEIGHT
   },
   colorSchemes: {
     // light: {
