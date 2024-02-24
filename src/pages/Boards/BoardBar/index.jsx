@@ -63,12 +63,15 @@ function BoardBar() {
           <AvatarGroup
             max={6}
             sx={{
-              gap: '2px',
+              gap: '10px',
               '& .MuiAvatar-root': {
                 width: '34px',
                 height: '34px',
                 fontSize: 16,
-                border: 'none'
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                '&:first-of-type': { bgcolor: '#a4b0be' }
               }
             }}
           >
