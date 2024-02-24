@@ -8,22 +8,11 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
-function Card({ hideCardMedia }) {
-  if (hideCardMedia) {
-    return (
-      <MuiCard
-        sx={{
-          cursor: 'pointer',
-          boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-          overflow: 'unset'
-        }}
-      >
-        <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-          <Typography>Card test 01</Typography>
-        </CardContent>
-      </MuiCard>
-    )
+function Card({ card }) {
+  const shouldShowCardActions = () => {
+    return card?.memberIds?.length > 0 || card?.comments?.length > 0 || !!card?.attachments?.length > 0
   }
+
   return (
     <MuiCard
       sx={{
@@ -32,39 +21,47 @@ function Card({ hideCardMedia }) {
         overflow: 'unset'
       }}
     >
-      <CardMedia sx={{ height: 140 }} image="	https://c4.wallpaperflare.com/wallpaper/965/883/624/manga-one-piece-wallpaper-preview.jpg" title="green iguana" />
+      {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} />}
       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-        <Typography>DatDev MERN Stack</Typography>
+        <Typography>{card?.title}</Typography>
       </CardContent>
-      <CardActions sx={{ p: '0px 4px 8px 2px' }}>
-        <Button
-          sx={{
-            color: '#03ab9b'
-          }}
-          startIcon={<GroupIcon />}
-          size="small"
-        >
-          20
-        </Button>
-        <Button
-          sx={{
-            color: '#03ab9b'
-          }}
-          startIcon={<CommentIcon />}
-          size="small"
-        >
-          15
-        </Button>
-        <Button
-          sx={{
-            color: '#03ab9b'
-          }}
-          startIcon={<AttachmentIcon />}
-          size="small"
-        >
-          2
-        </Button>
-      </CardActions>
+      {shouldShowCardActions() && (
+        <CardActions sx={{ p: '0px 4px 8px 2px' }}>
+          {card?.memberIds?.length > 0 && (
+            <Button
+              sx={{
+                color: '#03ab9b'
+              }}
+              startIcon={<GroupIcon />}
+              size="small"
+            >
+              {card?.memberIds?.length}
+            </Button>
+          )}
+          {card?.comments?.length > 0 && (
+            <Button
+              sx={{
+                color: '#03ab9b'
+              }}
+              startIcon={<CommentIcon />}
+              size="small"
+            >
+              {card?.comments?.length}
+            </Button>
+          )}
+          {card?.attachments?.length > 0 && (
+            <Button
+              sx={{
+                color: '#03ab9b'
+              }}
+              startIcon={<AttachmentIcon />}
+              size="small"
+            >
+              {card?.attachments?.length}
+            </Button>
+          )}
+        </CardActions>
+      )}
     </MuiCard>
   )
 }
