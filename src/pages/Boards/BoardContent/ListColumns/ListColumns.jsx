@@ -4,7 +4,7 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd'
 
 import Column from './Column/Column'
 
-function ListColumns() {
+function ListColumns({ columns }) {
   return (
     <Box
       sx={{
@@ -20,10 +20,9 @@ function ListColumns() {
       }}
     >
       {/* Box Column 1 */}
-      <Column />
-      <Column />
-      <Column />
-      <Column />
+      {columns?.map((column) => (
+        <Column column={column} key={column._id} />
+      ))}
 
       <Box
         sx={{
