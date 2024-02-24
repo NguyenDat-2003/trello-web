@@ -35,7 +35,7 @@ function Profiles() {
             sx={{ padding: 0 }}
           >
             <Avatar
-              sx={{ width: 36, height: 36, mr: 2 }}
+              sx={{ width: 36, height: 36 }}
               src="https://scontent.fsgn17-1.fna.fbcdn.net/v/t39.30808-6/383496218_1513111766121143_3144856095428973168_n.jpg?_nc_cat=105&cb=99be929b-b574a898&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEG5RTkkqsy6LSU3GiFLHwa3us57Yx7Dkze6zntjHsOTDcqQZznlMdtu1GTEB0jGtLfT7wBklnVux9ZFk38c7cL&_nc_ohc=WU8qx9BNNVoAX8GZk9S&_nc_ht=scontent.fsgn17-1.fna&oh=00_AfAApNOi8TNEkyxvm_J2apV-dmQg4XmbVesm-CRol80MZQ&oe=65DBCD01"
               alt="datdev"
             />
