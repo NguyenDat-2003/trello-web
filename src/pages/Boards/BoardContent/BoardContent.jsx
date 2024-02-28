@@ -1,7 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners } from '@dnd-kit/core'
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+  defaultDropAnimationSideEffects,
+  closestCorners,
+  pointerWithin,
+  rectIntersection,
+  getFirstCollision,
+  closestCenter
+} from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 
 import { mapOrder } from '~/utils/sorts'
@@ -24,16 +37,14 @@ function BoardContent({ board }) {
 
   // -- Ưu tiên sử dụng 2 loại sensors là mouse và touch để trải nghiệm trên mobile tốt nhất không bị bug
   const sensors = useSensors(mouseSensor, touchSensor)
-
   const [orderedColumns, setOrderedColumns] = useState([])
-
   // --- Cùng một thời điểm chỉ có một phần tử được kéo là column hoặc card
   const [activeDragItemId, setActiveDragItemId] = useState(null)
-
   const [activeDragItemType, setActiveDragItemIdType] = useState(null)
-
   const [activeDragItemData, setActiveDragItemIdData] = useState(null)
   const [oldColumnWhenDragCard, setOldColumnWhenDragCard] = useState(null)
+
+  const lastOverId = useRef(null)
 
   useEffect(() => {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
@@ -212,6 +223,34 @@ function BoardContent({ board }) {
     })
   }
 
+  const collisionDetectionStrategy = useCallback(
+    (args) => {
+      if (activeDragItemType === activeDragItemType.COLUMN) {
+        return closestCorners({ ...args })
+      }
+
+      const pointerIntersections = pointerWithin(args)
+      const interSections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
+
+      let overId = getFirstCollision(interSections, 'id')
+
+      if (overId) {
+        const checkColumn = orderedColumns.find((column) => column._id === overId)
+        if (checkColumn) {
+          overId = closestCenter({
+            ...args,
+            droppableContainers: args.droppableContainers.filter((container) => container.id !== overId && checkColumn?.cardOrderIds?.includes(container.id))
+          })[0]?.id
+        }
+        lastOverId.current = overId
+        return [{ id: overId }]
+      }
+
+      return lastOverId.current ? [{ id: lastOverId }] : []
+    },
+    [activeDragItemType]
+  )
+
   return (
     <DndContext
       onDragStart={handleDragStart}
@@ -219,7 +258,9 @@ function BoardContent({ board }) {
       onDragEnd={handleDragEnd}
       sensors={sensors}
       // --- Thuật toán phát hiện va chạm ( nếu không có nó thì card với cover lớn sẽ không kéo qua column dc vì lúc này nó đang bị conflict giữa card và column ), chúng ta sử dụng closestCorners thay vì closestCenter
-      collisionDetection={closestCorners}
+      // collisionDetection={closestCorners}
+      // Tự custom nâng cao thuật toán phá hiện va chạm fix bug
+      collisionDetection={collisionDetectionStrategy}
     >
       <Box
         sx={{
