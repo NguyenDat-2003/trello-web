@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core'
+import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 
 import { mapOrder } from '~/utils/sorts'
@@ -158,7 +158,14 @@ function BoardContent({ board }) {
   }
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} sensors={sensors}>
+    <DndContext
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+      sensors={sensors}
+      // --- Thuật toán phát hiện va chạm ( nếu không có nó thì card với cover lớn sẽ không kéo qua column dc vì lúc này nó đang bị conflict giữa card và column ), chúng ta sử dụng closestCorners thay vì closestCenter
+      collisionDetection={closestCorners}
+    >
       <Box
         sx={{
           width: ' 100%',
