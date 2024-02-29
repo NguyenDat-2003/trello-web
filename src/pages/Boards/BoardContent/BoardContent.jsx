@@ -18,7 +18,8 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { mapOrder } from '~/utils/sorts'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/utils/formatters'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -71,6 +72,10 @@ function BoardContent({ board }) {
         //-- Xóa card ở colum active
         nextActiveColumn.cards = nextActiveColumn.cards.filter((card) => card._id !== activeCardId)
 
+        // --- THêm placeholderCard nếu column bị kéo hết card đi
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
         // --- Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map((card) => card._id)
       }
@@ -87,6 +92,9 @@ function BoardContent({ board }) {
 
         // --- THêm card đang kéo vào overColumn theo vị trí Index mới
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeCardData)
+
+        // ---
+        nextOverColumn.cards = nextOverColumn.cards.filter((card) => !card.FE_PlaceholderCard)
 
         // --- Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
@@ -223,7 +231,7 @@ function BoardContent({ board }) {
 
   const collisionDetectionStrategy = useCallback(
     (args) => {
-      if (activeDragItemType === activeDragItemType.COLUMN) {
+      if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
         return closestCorners({ ...args })
       }
 
@@ -256,14 +264,14 @@ function BoardContent({ board }) {
 
   return (
     <DndContext
+      sensors={sensors}
+      collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
-      sensors={sensors}
       // --- Thuật toán phát hiện va chạm ( nếu không có nó thì card với cover lớn sẽ không kéo qua column dc vì lúc này nó đang bị conflict giữa card và column ), chúng ta sử dụng closestCorners thay vì closestCenter
       // collisionDetection={closestCorners}
       // Tự custom nâng cao thuật toán phá hiện va chạm fix bug
-      collisionDetection={collisionDetectionStrategy}
     >
       <Box
         sx={{
