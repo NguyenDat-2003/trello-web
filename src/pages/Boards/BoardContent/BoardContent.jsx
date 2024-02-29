@@ -11,9 +11,7 @@ import {
   defaultDropAnimationSideEffects,
   closestCorners,
   pointerWithin,
-  rectIntersection,
-  getFirstCollision,
-  closestCenter
+  getFirstCollision
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 
@@ -229,26 +227,31 @@ function BoardContent({ board }) {
         return closestCorners({ ...args })
       }
 
+      // --- Tìm các điểm giao nhau, va chạm - intersections với con trỏ
       const pointerIntersections = pointerWithin(args)
-      const interSections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
+      if (!pointerIntersections?.length) return
 
-      let overId = getFirstCollision(interSections, 'id')
+      // ---Thuật toán phát hiện va chạm sẽ trả về một mảng các va chạm ở đây
+      // const interSections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
 
+      let overId = getFirstCollision(pointerIntersections, 'id')
       if (overId) {
         const checkColumn = orderedColumns.find((column) => column._id === overId)
         if (checkColumn) {
-          overId = closestCenter({
+          overId = closestCorners({
             ...args,
-            droppableContainers: args.droppableContainers.filter((container) => container.id !== overId && checkColumn?.cardOrderIds?.includes(container.id))
+            droppableContainers: args.droppableContainers.filter((container) => {
+              return container.id !== overId && checkColumn?.cardOrderIds?.includes(container.id)
+            })
           })[0]?.id
         }
         lastOverId.current = overId
         return [{ id: overId }]
       }
 
-      return lastOverId.current ? [{ id: lastOverId }] : []
+      return lastOverId.current ? [{ id: lastOverId.current }] : []
     },
-    [activeDragItemType]
+    [activeDragItemType, orderedColumns]
   )
 
   return (
