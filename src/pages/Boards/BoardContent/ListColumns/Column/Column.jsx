@@ -211,6 +211,7 @@ function Column({ column }) {
                 label="Enter card title..."
                 varient="outlined"
                 autoFocus
+                data-no-dnd="true"
                 size="small"
                 value={newCardtitle}
                 onChange={(e) => setNewCardtitle(e.target.value)}
@@ -246,6 +247,7 @@ function Column({ column }) {
                 <Button
                   onClick={addNewCard}
                   variant="contained"
+                  data-no-dnd="true"
                   color="info"
                   size="small"
                   sx={{
@@ -260,9 +262,8 @@ function Column({ column }) {
                 <CloseIcon
                   onClick={toggleOpenNewCardForm}
                   sx={{
-                    color: 'white',
-                    cursor: 'pointer',
-                    '&:hover': { color: (theme) => theme.palette.warning.light }
+                    color: (theme) => theme.palette.warning.light,
+                    cursor: 'pointer'
                   }}
                   fontSize="small"
                 />
