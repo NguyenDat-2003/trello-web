@@ -103,7 +103,7 @@ function AppBar() {
                 </InputAdornment>
               ),
               endAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position="end">
                   <CloseIcon
                     onClick={() => setSearchValue('')}
                     sx={{
