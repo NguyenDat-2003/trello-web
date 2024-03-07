@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
@@ -58,7 +59,7 @@ function Column({ column }) {
   const [newCardtitle, setNewCardtitle] = useState('')
   const addNewCard = () => {
     if (!newCardtitle) {
-      // console.error('Please Enter Column titile')
+      toast.error('Please Enter Card titile')
       return
     }
     // console.log(newColumntitle)
