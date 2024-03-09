@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { API_ROOT } from '~/utils/constants'
 
+//  *** Board
 export const fetchBoardDetailAPI = async (boardId) => {
   const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
   return response.data
@@ -8,6 +9,11 @@ export const fetchBoardDetailAPI = async (boardId) => {
 
 export const updateBoardDetailAPI = async (boardId, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
+  return response.data
+}
+
+export const moveCardsToDifferentColumnAPI = async (updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/boards/supports/moving-card`, updateData)
   return response.data
 }
 

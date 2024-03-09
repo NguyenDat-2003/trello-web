@@ -4,7 +4,7 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect, useState } from 'react'
-import { createNewColumnAPI, fetchBoardDetailAPI, createNewCardAPI, updateBoardDetailAPI, updateColumnDetailAPI } from '~/apis'
+import { createNewColumnAPI, fetchBoardDetailAPI, createNewCardAPI, updateBoardDetailAPI, updateColumnDetailAPI, moveCardsToDifferentColumnAPI } from '~/apis'
 import { isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { mapOrder } from '~/utils/sorts'
@@ -95,6 +95,27 @@ function Board() {
     updateColumnDetailAPI(columnId, { cardOrderIds: dndOrderedCardIds })
   }
 
+  // Func này có nhiệm vụ gọi API sau khi kéo thả cards sang một column khác
+  // * B1: Cập nhật mảng cardOrderIds của Column ban đầu (Nghĩa là xóa cái _id của Card ra khỏi column ban đầu)
+  // * B2: Cập nhật mảng cardOrderIds của Column tiếp theo (Nghĩa là thêm cái _id của Card vào column mới)
+  // * B3: Cập nhật lại trường columnId mới của card đã kéo
+  const moveCardsToDifferentColumn = async (currentCardId, prevColumnId, nextColumnId, dndOrderedComlumns) => {
+    const dndOrderedColumnsIds = dndOrderedComlumns.map((c) => c._id)
+    const newBoard = { ...board }
+    newBoard.columns = dndOrderedComlumns
+    newBoard.columnOrderIds = dndOrderedColumnsIds
+    setBoard(newBoard)
+
+    // --- Gọi API Update Column
+    moveCardsToDifferentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds: dndOrderedComlumns.find((c) => c._id === prevColumnId)?.cardOrderIds,
+      nextColumnId,
+      nextCardOrderIds: dndOrderedComlumns.find((c) => c._id === nextColumnId)?.cardOrderIds
+    })
+  }
+
   if (!board) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, width: '100vw', height: '100vh' }}>
@@ -109,7 +130,14 @@ function Board() {
       <AppBar />
       {/* Optional chaining  mockData?.board*/}
       <BoardBar board={board} />
-      <BoardContent board={board} createNewColumn={createNewColumn} createNewCard={createNewCard} moveColumns={moveColumns} moveCardsInColumn={moveCardsInColumn} />
+      <BoardContent
+        board={board}
+        createNewColumn={createNewColumn}
+        createNewCard={createNewCard}
+        moveColumns={moveColumns}
+        moveCardsInColumn={moveCardsInColumn}
+        moveCardsToDifferentColumn={moveCardsToDifferentColumn}
+      />
     </Container>
   )
 }

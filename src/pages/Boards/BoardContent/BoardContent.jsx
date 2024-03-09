@@ -28,7 +28,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardsInColumn }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardsInColumn, moveCardsToDifferentColumn }) {
   // https://docs.dndkit.com/api-documentation/sensors
   //--- Yêu cầu chuột move khoảng 10px thì mới gọi hàm handleDragEnd, fix bug khi click vào bị gọi hàm handleDragEnd
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
@@ -56,7 +56,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
     return orderedColumns.find((column) => column.cards.map((card) => card._id)?.includes(cardId))
   }
 
-  const moveCardBetweenDifferentColumn = (overColumn, overCardId, active, over, activeColumn, activeCardId, activeCardData) => {
+  // --- Khởi tạo Func chung xử lý việc cập nhật lại State trong trường hợp di chuyển card giữa các column khác nhau
+  const moveCardBetweenDifferentColumn = (overColumn, overCardId, active, over, activeColumn, activeCardId, activeCardData, triggerFrom) => {
     setOrderedColumns((prevColumns) => {
       const overCardIndex = overColumn?.cards?.findIndex((card) => card._id === overCardId)
 
@@ -102,6 +103,11 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
         // --- Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id)
       }
+
+      //--- Nếu Func dc gọi từ handle DragEnd tức là đã kéo thả xong, lúc này ms gọi  API 1 lần ở đây
+      if (triggerFrom === 'handleDragEnd') {
+        moveCardsToDifferentColumn(activeCardId, oldColumnWhenDragCard._id, nextOverColumn._id, nextColumns)
+      }
       return nextColumns
     })
   }
@@ -145,7 +151,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
 
     // --- Khi chúng ta kéo thả card trong 2 columns khác nhau thì mới xử lý logic, nếu kéo trong cùng 1 column thì không làm gì
     if (activeColumn._id !== overColumn._id) {
-      moveCardBetweenDifferentColumn(overColumn, overCardId, active, over, activeColumn, activeCardId, activeCardData)
+      moveCardBetweenDifferentColumn(overColumn, overCardId, active, over, activeColumn, activeCardId, activeCardData, 'handleDragOver')
     }
   }
 
@@ -174,7 +180,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
 
       // --- Phải dùng state mới để lưu các card trong column cũ lại bởi vì sau khi qua onDragOver thì state của card đã được cập nhật mới lại r
       if (oldColumnWhenDragCard._id !== overColumn._id) {
-        moveCardBetweenDifferentColumn(overColumn, overCardId, active, over, activeColumn, activeCardId, activeCardData)
+        moveCardBetweenDifferentColumn(overColumn, overCardId, active, over, activeColumn, activeCardId, activeCardData, 'handleDragEnd')
       } else {
         // *********** Hành động kéo thả card trong cùng 1 column **************
         //---Lấy vị trí cũ từ oldColumnWhenDragCard
