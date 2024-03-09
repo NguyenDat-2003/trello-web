@@ -22,8 +22,6 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 
-import { mapOrder } from '~/utils/sorts'
-
 import ListCards from './ListCards/ListCards'
 
 function Column({ column, createNewCard }) {
@@ -51,7 +49,8 @@ function Column({ column, createNewCard }) {
     setAnchorEl(null)
   }
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  // --- Card đã được sắp xếp ở component cha cai nhất
+  const orderedCards = column.cards
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
@@ -67,7 +66,7 @@ function Column({ column, createNewCard }) {
       title: newCardtitle,
       columnId: column._id
     }
-    await createNewCard(newCardData)
+    createNewCard(newCardData)
 
     toggleOpenNewCardForm()
     setNewCardtitle('')
