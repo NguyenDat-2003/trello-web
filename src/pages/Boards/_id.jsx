@@ -59,9 +59,16 @@ function Board() {
     const newBoard = { ...board }
     const columntoUpdate = newBoard.columns.find((column) => column._id == createdCard.columnId)
     if (columntoUpdate) {
-      columntoUpdate.cards.push(createdCard)
-      columntoUpdate.cardOrderIds.push(createdCard._id)
+      if (columntoUpdate.cards.some((card) => card.FE_PlaceholderCard)) {
+        columntoUpdate.cards = [createdCard]
+        columntoUpdate.cardOrderIds = [createdCard._id]
+      } else {
+        columntoUpdate.cards.push(createdCard)
+        columntoUpdate.cardOrderIds.push(createdCard._id)
+      }
     }
+    // console.log('🚀 ~ createNewCard ~ columntoUpdate:', columntoUpdate)
+
     setBoard(newBoard)
   }
 
@@ -106,11 +113,17 @@ function Board() {
     newBoard.columnOrderIds = dndOrderedColumnsIds
     setBoard(newBoard)
 
+    let prevCardOrderIds = dndOrderedComlumns.find((c) => c._id === prevColumnId)?.cardOrderIds
+    // --- Xử lý vấn đề khi kéo card cuối cùng ra khỏi column, column rỗng số có placeholer cần xóa nó đi trước khi gửi dữ liệu lên BE
+    if (prevCardOrderIds[0].includes('placeholder-card')) {
+      prevCardOrderIds = []
+    }
+
     // --- Gọi API Update Column
     moveCardsToDifferentColumnAPI({
       currentCardId,
       prevColumnId,
-      prevCardOrderIds: dndOrderedComlumns.find((c) => c._id === prevColumnId)?.cardOrderIds,
+      prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedComlumns.find((c) => c._id === nextColumnId)?.cardOrderIds
     })
