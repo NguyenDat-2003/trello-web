@@ -9,17 +9,21 @@ import CloseIcon from '@mui/icons-material/Close'
 
 import Column from './Column/Column'
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumntitle, setNewColumntitle] = useState('')
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumntitle) {
       toast.error('Please Enter Column Title')
       return
     }
     // console.log(newColumntitle)
+    const newColumnData = {
+      title: newColumntitle
+    }
+    await createNewColumn(newColumnData)
 
     toggleOpenNewColumnForm()
     setNewColumntitle('')
@@ -43,7 +47,7 @@ function ListColumns({ columns }) {
       >
         {/* Box Column 1 */}
         {columns?.map((column) => (
-          <Column column={column} key={column._id} />
+          <Column column={column} key={column._id} createNewCard={createNewCard} />
         ))}
         {!openNewColumnForm ? (
           <Box

@@ -26,7 +26,7 @@ import { mapOrder } from '~/utils/sorts'
 
 import ListCards from './ListCards/ListCards'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
@@ -57,12 +57,17 @@ function Column({ column }) {
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
 
   const [newCardtitle, setNewCardtitle] = useState('')
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardtitle) {
       toast.error('Please Enter Card titile')
       return
     }
     // console.log(newColumntitle)
+    const newCardData = {
+      title: newCardtitle,
+      columnId: column._id
+    }
+    await createNewCard(newCardData)
 
     toggleOpenNewCardForm()
     setNewCardtitle('')
