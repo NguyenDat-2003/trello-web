@@ -29,7 +29,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
   // https://docs.dndkit.com/api-documentation/sensors
   //--- Yêu cầu chuột move khoảng 10px thì mới gọi hàm handleDragEnd, fix bug khi click vào bị gọi hàm handleDragEnd
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
@@ -207,9 +207,8 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
 
         //--- Logic kéo columns trong BoardContent (arrayMove)
         const dndOrderedComlumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-        // console.log(dndOrderedComlumns)
-        // const orderColumnsIds = dndOrderedComlumns.map((c) => c._id)
-        // console.log(orderColumnsIds)
+
+        moveColumn(dndOrderedComlumns)
 
         //--Cập nhật lại state columns ban đầu sau khi đã kéo thả
         setOrderedColumns(dndOrderedComlumns)
