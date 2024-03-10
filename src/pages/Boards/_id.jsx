@@ -4,11 +4,20 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect, useState } from 'react'
-import { createNewColumnAPI, fetchBoardDetailAPI, createNewCardAPI, updateBoardDetailAPI, updateColumnDetailAPI, moveCardsToDifferentColumnAPI } from '~/apis'
+import {
+  createNewColumnAPI,
+  fetchBoardDetailAPI,
+  createNewCardAPI,
+  updateBoardDetailAPI,
+  updateColumnDetailAPI,
+  moveCardsToDifferentColumnAPI,
+  deleteColumnDetailAPI
+} from '~/apis'
 import { isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { mapOrder } from '~/utils/sorts'
 import { Box, CircularProgress, Typography } from '@mui/material'
+import { toast } from 'react-toastify'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -107,6 +116,7 @@ function Board() {
   // * B2: Cập nhật mảng cardOrderIds của Column tiếp theo (Nghĩa là thêm cái _id của Card vào column mới)
   // * B3: Cập nhật lại trường columnId mới của card đã kéo
   const moveCardsToDifferentColumn = async (currentCardId, prevColumnId, nextColumnId, dndOrderedComlumns) => {
+    // --- Update cho chuẩn dữ liệu State board
     const dndOrderedColumnsIds = dndOrderedComlumns.map((c) => c._id)
     const newBoard = { ...board }
     newBoard.columns = dndOrderedComlumns
@@ -127,6 +137,19 @@ function Board() {
       nextColumnId,
       nextCardOrderIds: dndOrderedComlumns.find((c) => c._id === nextColumnId)?.cardOrderIds
     })
+  }
+
+  // --- Xử lý xóa một column và card trong nó
+  const deleteColumnDetail = async (columnId) => {
+    // --- Update cho chuẩn dữ liệu State board
+    const newBoard = { ...board }
+    newBoard.columns = newBoard.columns.filter((c) => c._id !== columnId)
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter((_id) => _id !== columnId)
+    setBoard(newBoard)
+
+    // --- Gọi API Delete Column
+    const result = await deleteColumnDetailAPI(columnId)
+    toast.success(result.deleteResult)
   }
 
   if (!board) {
@@ -150,6 +173,7 @@ function Board() {
         moveColumns={moveColumns}
         moveCardsInColumn={moveCardsInColumn}
         moveCardsToDifferentColumn={moveCardsToDifferentColumn}
+        deleteColumnDetail={deleteColumnDetail}
       />
     </Container>
   )
