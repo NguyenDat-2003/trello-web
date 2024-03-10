@@ -28,7 +28,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardsInColumn, moveCardsToDifferentColumn }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardsInColumn, moveCardsToDifferentColumn, deleteColumnDetail }) {
   // https://docs.dndkit.com/api-documentation/sensors
   //--- Yêu cầu chuột move khoảng 10px thì mới gọi hàm handleDragEnd, fix bug khi click vào bị gọi hàm handleDragEnd
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
@@ -293,7 +293,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
           p: '10px 0px'
         }}
       >
-        <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard} />
+        <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard} deleteColumnDetail={deleteColumnDetail} />
         <DragOverlay dropAnimation={dropAnimation}>
           {!activeDragItemType && null}
           {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && <Column column={activeDragItemData} />}
